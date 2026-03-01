@@ -1,0 +1,44 @@
+name: 每日汇率报告
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # 每天UTC 0点 = 北京时间早8点
+  workflow_dispatch:      # 允许手动触发
+
+jobs:
+  generate-report:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 拉取代码
+      uses: actions/checkout@v3
+
+    - name: 安装Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: 安装依赖
+      run: pip install requests yfinance
+
+    - name: 写入API Key
+      run: |
+        cat > config.py << EOF
+        FRED_API_KEY = "${{ secrets.FRED_API_KEY }}"
+        ALPHA_VANTAGE_KEY = "${{ secrets.ALPHA_VANTAGE_KEY }}"
+        NASDAQ_API_KEY = "${{ secrets.NASDAQ_API_KEY }}"
+        EOF
+
+    - name: 生成报告
+      run: python report.py
+
+    - name: 复制为index.html
+      run: ls -t fx_report_*.html | head -1 | xargs -I {} cp {} index.html
+
+    - name: 推送到GitHub
+      run: |
+        git config user.name "github-actions"
+        git config user.email "actions@github.com"
+        git add index.html
+        git commit -m "每日更新 $(date '+%Y-%m-%d')"
+        git push
