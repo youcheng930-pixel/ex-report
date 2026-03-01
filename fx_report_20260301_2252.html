@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>汇率观察日报 · 2026/03/01</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=JetBrains+Mono:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #0f0f13;
+      --bg2: #16161e;
+      --bg3: #1e1e28;
+      --border: rgba(255,255,255,0.07);
+      --text: #e8e8f0;
+      --muted: #7b7b8d;
+      --accent: #818cf8;
+      --accent2: #34d399;
+      --danger: #f87171;
+      --warn: #fbbf24;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', 'Noto Serif SC', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 0 0 60px;
+    }
+
+    /* 顶部横幅 */
+    .header {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      border-bottom: 1px solid rgba(129,140,248,0.2);
+      padding: 40px 0 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(129,140,248,0.15) 0%, transparent 70%);
+    }
+    .header-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+    }
+    .header-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .header h1 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .header-sub {
+      color: rgba(255,255,255,0.45);
+      font-size: 13px;
+    }
+    .risk-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      background: rgba(245,158,11,0.12);
+      border: 1px solid #f59e0b44;
+      color: #f59e0b;
+      margin-top: 16px;
+    }
+    .risk-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #f59e0b;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.3); }
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* 四格指标卡 */
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 28px 0 20px;
+    }
+    @media (max-width: 700px) {
+      .metrics { grid-template-columns: repeat(2, 1fr); }
+    }
+    .metric-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 18px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .metric-card:hover { border-color: rgba(129,140,248,0.3); }
+    .metric-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+    }
+    .mc-usdcny::after { background: linear-gradient(90deg, #818cf8, #a78bfa); }
+    .mc-treasury::after { background: linear-gradient(90deg, #34d399, #6ee7b7); }
+    .mc-dxy::after { background: linear-gradient(90deg, #fbbf24, #fde68a); }
+    .mc-vix::after { background: linear-gradient(90deg, #f87171, #fca5a5); }
+
+    .metric-label {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .metric-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 26px;
+      font-weight: 600;
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .metric-meta {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* 图表区 */
+    .chart-section {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .section-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-title::before {
+      content: '';
+      display: block;
+      width: 3px;
+      height: 16px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+    .chart-stats {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .chart-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .chart-stat-label { font-size: 11px; color: var(--muted); }
+    .chart-stat-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .chart-container { height: 180px; }
+
+    /* 两栏布局 */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 650px) {
+      .two-col { grid-template-columns: 1fr; }
+    }
+
+    /* 建议卡片 */
+    .suggests-section {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .suggest-card {
+      display: flex;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .suggest-card:last-child { border-bottom: none; padding-bottom: 0; }
+    .suggest-card:first-child { padding-top: 0; }
+    .suggest-icon {
+      font-size: 22px;
+      width: 36px;
+      flex-shrink: 0;
+      padding-top: 2px;
+    }
+    .suggest-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 5px;
+    }
+    .suggest-content {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* 历史表格 */
+    .table-section {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      text-align: left;
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 0 12px 12px 12px;
+    }
+    td {
+      font-size: 13px;
+      padding: 10px 12px;
+      border-top: 1px solid var(--border);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    tr:first-child td { border-top: none; }
+
+    /* 免责声明 */
+    .disclaimer {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    /* 数据源脚注 */
+    .footer {
+      text-align: center;
+      font-size: 11px;
+      color: #3a3a4a;
+      padding-top: 10px;
+    }
+    .footer span { margin: 0 8px; }
+
+    .badge-ok {
+      display: inline-block;
+      background: rgba(52,211,153,0.1);
+      border: 1px solid rgba(52,211,153,0.2);
+      color: #34d399;
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .badge-error {
+      display: inline-block;
+      background: rgba(248,113,113,0.1);
+      border: 1px solid rgba(248,113,113,0.2);
+      color: #f87171;
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+
+    /* 风险仪表 */
+    .risk-meter {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .risk-bar-bg {
+      flex: 1;
+      height: 4px;
+      background: var(--bg3);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .risk-bar-fill {
+      height: 100%;
+      width: 40%;
+      background: linear-gradient(90deg, #10b981, #fbbf24, #ef4444);
+      border-radius: 2px;
+      transition: width 1s ease;
+    }
+    .risk-pct {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      width: 32px;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <!-- 顶部标题 -->
+  <div class="header">
+    <div class="header-inner">
+      <div class="header-tag">FX Daily · Macro Dashboard</div>
+      <h1>汇率观察日报</h1>
+      <div class="header-sub">生成时间：2026年03月01日 22:52 &nbsp;·&nbsp; 数据来源：ExchangeRate-API · FRED · Alpha Vantage · Nasdaq Data Link</div>
+      <div class="risk-pill">
+        <span class="risk-dot"></span>
+        当前市场风险等级：中等
+      </div>
+      <div class="risk-meter">
+        <div class="risk-bar-bg"><div class="risk-bar-fill"></div></div>
+        <div class="risk-pct">40分</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- 四格指标 -->
+    <div class="metrics">
+      <div class="metric-card mc-usdcny">
+        <div class="metric-label">💱 USD/CNY</div>
+        <div class="metric-value">6.8700</div>
+        <div class="metric-meta">2026-03-01</div>
+      </div>
+      <div class="metric-card mc-treasury">
+        <div class="metric-label">🏦 10Y 美债收益率</div>
+        <div class="metric-value">4.02%</div>
+        <div class="metric-meta">2026-02-26</div>
+      </div>
+      <div class="metric-card mc-dxy">
+        <div class="metric-label">💵 DXY 美元指数</div>
+        <div class="metric-value">55.20</div>
+        <div class="metric-meta">基于EUR/USD估算 · 2026-02-27</div>
+      </div>
+      <div class="metric-card mc-vix">
+        <div class="metric-label">😱 VIX 恐慌指数</div>
+        <div class="metric-value">19.9</div>
+        <div class="metric-meta">2026-02-27</div>
+      </div>
+    </div>
+
+    <!-- 汇率走势图 -->
+    <div class="chart-section">
+      <div class="section-title">USD/CNY 近14日走势</div>
+      <div class="chart-stats">
+        <div class="chart-stat">
+          <span class="chart-stat-label">当前</span>
+          <span class="chart-stat-val" style="color:var(--accent)">6.8700</span>
+        </div>
+        <div class="chart-stat">
+          <span class="chart-stat-label">30日均值</span>
+          <span class="chart-stat-val">6.7536</span>
+        </div>
+        <div class="chart-stat">
+          <span class="chart-stat-label">30日最高</span>
+          <span class="chart-stat-val" style="color:var(--danger)">6.8700</span>
+        </div>
+        <div class="chart-stat">
+          <span class="chart-stat-label">30日最低</span>
+          <span class="chart-stat-val" style="color:var(--accent2)">6.7175</span>
+        </div>
+      </div>
+      <div class="chart-container">
+        <canvas id="rateChart"></canvas>
+      </div>
+    </div>
+
+    <!-- 换汇建议 -->
+    <div class="suggests-section">
+      <div class="section-title">综合换汇分析建议</div>
+      
+        <div class="suggest-card">
+          <div class="suggest-icon">✅</div>
+          <div class="suggest-body">
+            <div class="suggest-title">市场情绪稳定</div>
+            <div class="suggest-content">VIX=19.9（<20为平静区间），市场波动较小，换汇时机相对稳定，可正常操作。</div>
+          </div>
+        </div>
+        <div class="suggest-card">
+          <div class="suggest-icon">📊</div>
+          <div class="suggest-body">
+            <div class="suggest-title">美债收益率处于中性区间</div>
+            <div class="suggest-content">10年期美债收益率 4.02%，处于3.5%-4.5%中性区间，对汇率影响中性，关注后续美联储政策动向。</div>
+          </div>
+        </div>
+        <div class="suggest-card">
+          <div class="suggest-icon">💹</div>
+          <div class="suggest-body">
+            <div class="suggest-title">美元近期偏强，高于30日均值</div>
+            <div class="suggest-content">当前汇率 6.8700，30日均值 6.7536（偏高 +1.72%），30日区间 [6.7175, 6.8700]。美元处于相对高位，若需换成人民币可考虑近期操作。</div>
+          </div>
+        </div>
+        <div class="suggest-card">
+          <div class="suggest-icon">💵</div>
+          <div class="suggest-body">
+            <div class="suggest-title">美元指数偏弱</div>
+            <div class="suggest-content">DXY美元指数约 55.2（<100为偏弱区间），美元整体走弱，人民币相对受支撑，USD/CNY可能承压。</div>
+          </div>
+        </div>
+    </div>
+
+    <!-- 历史汇率 -->
+    <div class="two-col">
+      <div class="table-section">
+        <div class="section-title">近10日 USD/CNY 汇率</div>
+        <table>
+          <thead><tr>
+            <th>日期</th>
+            <th>汇率</th>
+            <th>变动</th>
+          </tr></thead>
+          <tbody>
+        <tr style="background:rgba(99,102,241,0.06)">
+          <td>📅 2026-03-01</td>
+          <td style="font-weight:700">6.8700</td>
+          <td><span style="color:#888">—</span></td>
+        </tr>
+        <tr >
+          <td>2026-02-28</td>
+          <td style="font-weight:400">6.7596</td>
+          <td><span style="color:#10b981">↓ 0.1104</span></td>
+        </tr>
+        <tr >
+          <td>2026-02-27</td>
+          <td style="font-weight:400">6.7513</td>
+          <td><span style="color:#10b981">↓ 0.0083</span></td>
+        </tr>
+        <tr >
+          <td>2026-02-26</td>
+          <td style="font-weight:400">6.7316</td>
+          <td><span style="color:#10b981">↓ 0.0197</span></td>
+        </tr>
+        <tr >
+          <td>2026-02-25</td>
+          <td style="font-weight:400">6.7472</td>
+          <td><span style="color:#ef4444">↑ 0.0156</span></td>
+        </tr>
+        <tr >
+          <td>2026-02-24</td>
+          <td style="font-weight:400">6.7631</td>
+          <td><span style="color:#ef4444">↑ 0.0159</span></td>
+        </tr>
+        <tr >
+          <td>2026-02-23</td>
+          <td style="font-weight:400">6.7675</td>
+          <td><span style="color:#ef4444">↑ 0.0044</span></td>
+        </tr>
+        <tr >
+          <td>2026-02-22</td>
+          <td style="font-weight:400">6.7425</td>
+          <td><span style="color:#10b981">↓ 0.0250</span></td>
+        </tr>
+        <tr >
+          <td>2026-02-21</td>
+          <td style="font-weight:400">6.7555</td>
+          <td><span style="color:#ef4444">↑ 0.0130</span></td>
+        </tr>
+        <tr >
+          <td>2026-02-20</td>
+          <td style="font-weight:400">6.7596</td>
+          <td><span style="color:#ef4444">↑ 0.0041</span></td>
+        </tr></tbody>
+        </table>
+      </div>
+
+      <div class="table-section">
+        <div class="section-title">宏观指标说明</div>
+        <table>
+          <thead><tr><th>指标</th><th>参考区间</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>USD/CNY</td>
+              <td>6.8–7.4 正常区间</td>
+            </tr>
+            <tr>
+              <td>10Y 美债</td>
+              <td>&lt;3.5% 偏低 / &gt;4.5% 偏高</td>
+            </tr>
+            <tr>
+              <td>DXY</td>
+              <td>&lt;100 偏弱 / &gt;105 偏强</td>
+            </tr>
+            <tr>
+              <td>VIX</td>
+              <td>&lt;20 平静 / 20-30 波动 / &gt;30 恐慌</td>
+            </tr>
+            <tr>
+              <td>换汇时机</td>
+              <td>低VIX + 低DXY = 相对有利</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 免责声明 -->
+    <div class="disclaimer">
+      ⚠️ <strong>免责声明：</strong>本报告由系统自动生成，所有内容仅供参考，不构成任何投资建议或换汇指导。汇率受宏观经济、政策变化、突发事件等多重因素影响，过去数据不代表未来走势。请结合自身实际情况、资金需求及风险承受能力做出决策，必要时咨询专业金融顾问。
+    </div>
+
+    <div class="footer">
+      <span>ExchangeRate-API</span>·
+      <span>FRED (St. Louis Fed)</span>·
+      <span>Alpha Vantage</span>·
+      <span>Nasdaq Data Link (CBOE VIX)</span>
+    </div>
+  </div>
+
+  <script>
+    const ctx = document.getElementById('rateChart').getContext('2d');
+    const labels = ["02-16", "02-17", "02-18", "02-19", "02-20", "02-21", "02-22", "02-23", "02-24", "02-25", "02-26", "02-27", "02-28", "03-01"];
+    const data = [6.7311, 6.7491, 6.7291, 6.7469, 6.7596, 6.7555, 6.7425, 6.7675, 6.7631, 6.7472, 6.7316, 6.7513, 6.7596, 6.87];
+    
+    const gradient = ctx.createLinearGradient(0, 0, 0, 180);
+    gradient.addColorStop(0, 'rgba(129, 140, 248, 0.25)');
+    gradient.addColorStop(1, 'rgba(129, 140, 248, 0)');
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'USD/CNY',
+          data: data,
+          borderColor: '#818cf8',
+          backgroundColor: gradient,
+          borderWidth: 2,
+          pointRadius: 3,
+          pointHoverRadius: 6,
+          pointBackgroundColor: '#818cf8',
+          pointBorderColor: '#0f0f13',
+          pointBorderWidth: 2,
+          fill: true,
+          tension: 0.4,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#1e1e28',
+            borderColor: 'rgba(129,140,248,0.3)',
+            borderWidth: 1,
+            titleColor: '#e8e8f0',
+            bodyColor: '#818cf8',
+            titleFont: { family: 'DM Sans', size: 11 },
+            bodyFont: { family: 'JetBrains Mono', size: 13, weight: '600' },
+            padding: 10,
+          }
+        },
+        scales: {
+          x: {
+            grid: { color: 'rgba(255,255,255,0.04)' },
+            ticks: { color: '#7b7b8d', font: { size: 10 } }
+          },
+          y: {
+            grid: { color: 'rgba(255,255,255,0.04)' },
+            ticks: {
+              color: '#7b7b8d',
+              font: { family: 'JetBrains Mono', size: 10 },
+              callback: v => v.toFixed(3)
+            }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
