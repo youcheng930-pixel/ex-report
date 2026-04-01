@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>汇率观察日报 · 2026/03/31</title>
+  <title>汇率观察日报 · 2026/04/01</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=JetBrains+Mono:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
@@ -77,15 +77,15 @@
       border-radius: 20px;
       font-size: 13px;
       font-weight: 600;
-      background: rgba(239,68,68,0.12);
-      border: 1px solid #ef444444;
-      color: #ef4444;
+      background: rgba(245,158,11,0.12);
+      border: 1px solid #f59e0b44;
+      color: #f59e0b;
       margin-top: 16px;
     }
     .risk-dot {
       width: 7px; height: 7px;
       border-radius: 50%;
-      background: #ef4444;
+      background: #f59e0b;
       animation: pulse 2s ease-in-out infinite;
     }
     @keyframes pulse {
@@ -322,7 +322,7 @@
     }
     .risk-bar-fill {
       height: 100%;
-      width: 75%;
+      width: 60%;
       background: linear-gradient(90deg, #10b981, #fbbf24, #ef4444);
       border-radius: 2px;
       transition: width 1s ease;
@@ -342,14 +342,14 @@
     <div class="header-inner">
       <div class="header-tag">FX Daily · Macro Dashboard</div>
       <h1>汇率观察日报</h1>
-      <div class="header-sub">生成时间：2026年03月31日 05:57 &nbsp;·&nbsp; 数据来源：ExchangeRate-API · FRED · Alpha Vantage · Nasdaq Data Link</div>
+      <div class="header-sub">生成时间：2026年04月01日 06:13 &nbsp;·&nbsp; 数据来源：ExchangeRate-API · FRED · Alpha Vantage · Nasdaq Data Link</div>
       <div class="risk-pill">
         <span class="risk-dot"></span>
-        当前市场风险等级：高
+        当前市场风险等级：中等
       </div>
       <div class="risk-meter">
         <div class="risk-bar-bg"><div class="risk-bar-fill"></div></div>
-        <div class="risk-pct">75分</div>
+        <div class="risk-pct">60分</div>
       </div>
     </div>
   </div>
@@ -359,23 +359,23 @@
     <div class="metrics">
       <div class="metric-card mc-usdcny">
         <div class="metric-label">💱 USD/CNY</div>
-        <div class="metric-value">6.9114</div>
-        <div class="metric-meta">2026-03-30</div>
+        <div class="metric-value">6.9004</div>
+        <div class="metric-meta">2026-03-31</div>
       </div>
       <div class="metric-card mc-treasury">
         <div class="metric-label">🏦 10Y 美债收益率</div>
-        <div class="metric-value">4.44%</div>
-        <div class="metric-meta">2026-03-27</div>
+        <div class="metric-value">4.35%</div>
+        <div class="metric-meta">2026-03-30</div>
       </div>
       <div class="metric-card mc-dxy">
         <div class="metric-label">💵 DXY 美元指数</div>
-        <div class="metric-value">100.45</div>
-        <div class="metric-meta">DX-Y.NYB · 2026-03-31</div>
+        <div class="metric-value">99.74</div>
+        <div class="metric-meta">DX-Y.NYB · 2026-04-01</div>
       </div>
       <div class="metric-card mc-vix">
         <div class="metric-label">😱 VIX 恐慌指数</div>
-        <div class="metric-value">30.6</div>
-        <div class="metric-meta">2026-03-30</div>
+        <div class="metric-value">25.2</div>
+        <div class="metric-meta">2026-03-31</div>
       </div>
     </div>
 
@@ -385,11 +385,11 @@
       <div class="chart-stats">
         <div class="chart-stat">
           <span class="chart-stat-label">当前</span>
-          <span class="chart-stat-val" style="color:var(--accent)">6.9114</span>
+          <span class="chart-stat-val" style="color:var(--accent)">6.9004</span>
         </div>
         <div class="chart-stat">
           <span class="chart-stat-label">30日均值</span>
-          <span class="chart-stat-val">6.8938</span>
+          <span class="chart-stat-val">6.8957</span>
         </div>
         <div class="chart-stat">
           <span class="chart-stat-label">30日最高</span>
@@ -397,7 +397,7 @@
         </div>
         <div class="chart-stat">
           <span class="chart-stat-label">30日最低</span>
-          <span class="chart-stat-val" style="color:var(--accent2)">6.8582</span>
+          <span class="chart-stat-val" style="color:var(--accent2)">6.8662</span>
         </div>
       </div>
       <div class="chart-container">
@@ -410,31 +410,31 @@
       <div class="section-title">综合换汇分析建议</div>
       
         <div class="suggest-card">
-          <div class="suggest-icon">⚠️</div>
+          <div class="suggest-icon">📊</div>
           <div class="suggest-body">
-            <div class="suggest-title">市场恐慌情绪浓厚</div>
-            <div class="suggest-content">VIX恐慌指数 30.6（>30为高恐慌区间），市场剧烈波动。建议分批换汇，避免一次性大额操作。</div>
+            <div class="suggest-title">市场存在一定波动</div>
+            <div class="suggest-content">VIX=25.2（20-30为中等波动），市场不确定性上升，建议控制单次换汇金额。</div>
           </div>
         </div>
         <div class="suggest-card">
           <div class="suggest-icon">📊</div>
           <div class="suggest-body">
             <div class="suggest-title">美债收益率处于中性区间</div>
-            <div class="suggest-content">10年期美债收益率 4.44%，处于3.5%-4.5%中性区间，对汇率影响中性。</div>
+            <div class="suggest-content">10年期美债收益率 4.35%，处于3.5%-4.5%中性区间，对汇率影响中性。</div>
           </div>
         </div>
         <div class="suggest-card">
           <div class="suggest-icon">💹</div>
           <div class="suggest-body">
             <div class="suggest-title">汇率处于均值附近</div>
-            <div class="suggest-content">当前汇率 6.9114，30日均值 6.8938（偏差 +0.26%），汇率较平稳，可按需换汇。</div>
+            <div class="suggest-content">当前汇率 6.9004，30日均值 6.8957（偏差 +0.07%），汇率较平稳，可按需换汇。</div>
           </div>
         </div>
         <div class="suggest-card">
           <div class="suggest-icon">💵</div>
           <div class="suggest-body">
-            <div class="suggest-title">美元指数中性</div>
-            <div class="suggest-content">DXY=100.45，处于100-105中性区间，美元强弱适中。</div>
+            <div class="suggest-title">美元指数偏弱</div>
+            <div class="suggest-content">DXY=99.74（<100为偏弱），美元整体走弱，人民币相对受支撑。</div>
           </div>
         </div>
     </div>
@@ -451,9 +451,14 @@
           </tr></thead>
           <tbody>
         <tr style="background:rgba(99,102,241,0.06)">
-          <td>📅 2026-03-30</td>
-          <td style="font-weight:700">6.9114</td>
+          <td>📅 2026-03-31</td>
+          <td style="font-weight:700">6.9004</td>
           <td><span style="color:#888">—</span></td>
+        </tr>
+        <tr >
+          <td>2026-03-30</td>
+          <td style="font-weight:400">6.9114</td>
+          <td><span style="color:#ef4444">↑ 0.0110</span></td>
         </tr>
         <tr >
           <td>2026-03-27</td>
@@ -494,11 +499,6 @@
           <td>2026-03-18</td>
           <td style="font-weight:400">6.8882</td>
           <td><span style="color:#10b981">↓ 0.0122</span></td>
-        </tr>
-        <tr >
-          <td>2026-03-17</td>
-          <td style="font-weight:400">6.8868</td>
-          <td><span style="color:#10b981">↓ 0.0014</span></td>
         </tr></tbody>
         </table>
       </div>
@@ -548,8 +548,8 @@
 
   <script>
     const ctx = document.getElementById('rateChart').getContext('2d');
-    const labels = ["03-11", "03-12", "03-13", "03-16", "03-17", "03-18", "03-19", "03-20", "03-23", "03-24", "03-25", "03-26", "03-27", "03-30"];
-    const data = [6.8662, 6.869, 6.8966, 6.8961, 6.8868, 6.8882, 6.9004, 6.8943, 6.8917, 6.8934, 6.8995, 6.9102, 6.9138, 6.9114];
+    const labels = ["03-12", "03-13", "03-16", "03-17", "03-18", "03-19", "03-20", "03-23", "03-24", "03-25", "03-26", "03-27", "03-30", "03-31"];
+    const data = [6.869, 6.8966, 6.8961, 6.8868, 6.8882, 6.9004, 6.8943, 6.8917, 6.8934, 6.8995, 6.9102, 6.9138, 6.9114, 6.9004];
     
     const gradient = ctx.createLinearGradient(0, 0, 0, 180);
     gradient.addColorStop(0, 'rgba(129, 140, 248, 0.25)');
